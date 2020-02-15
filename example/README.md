@@ -7,3 +7,7 @@ openframeworks video slicer example
 ## stiching video with ffmpeg
 -> [How to Stitch Videos Together](https://github.com/stoyanovgeorge/ffmpeg/wiki/How-to-Stitch-Videos-Together)</br>
 -> [concate to one video](https://trac.ffmpeg.org/wiki/Concatenate)
+
+## todo
+- [ ] : boolean check already sliced
+- [ ] : check original video info, for further usage (using json..?)
