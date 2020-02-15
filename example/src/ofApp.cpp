@@ -22,6 +22,8 @@ void ofApp::videoSlice(){
 	vector<float> fps;
 	string targetVideoPath = "original/";
 	dir.listDir(targetVideoPath);
+	dir.allowExt("mp4");	// allow only mp4 file. 
+	dis.allowExt("mov");	// allow only mov file.
 	dir.sort();
 
 	// check video Information
