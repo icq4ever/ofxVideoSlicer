@@ -11,6 +11,7 @@ private:
         float   in;
         int     frames;
         string  message;
+		string targetDirectoryName = "";
     };
     deque<command> queue;
     
@@ -56,14 +57,6 @@ public:
 		jpgOn = false;
     }
     
-	//--------------------------------------------------------------
-	// set save Directory
-	// if not called, save directory where original file located
-	//--------------------------------------------------------------
-	void setTargetFolder(string directoryName){
-		saveDirectory = directoryName + "/";
-	}
-
     //--------------------------------------------------------------
     // ofxVideoSlicer looks for the ffmpeg binary in the Resources
     // directory of the app bundle (for osx)
@@ -102,14 +95,21 @@ public:
     // Adds a splice task to queue
     // string message is a optional string which will be passed to
     // the onFileProcessed event
+	// targetDirectory(2nd parameter is optional)
     //--------------------------------------------------------------
-    void addTask(string _file, float _in, int _frames, string _message = ""){
+
+	void addTask(string _file, float _in, int _frames, string _message = ""){
+		addTask(_file, "", _in, _frames, _message="");
+	}
+
+	void addTask(string _file, string _directory, float _in, int _frames, string _message = ""){
         ofLogVerbose() << "+ ENQUEUE: LoadMovie: " << _file << endl;
         command c;
         c.file    = _file;
         c.in      = _in;
         c.frames  = _frames;
         c.message = _message;
+		c.targetDirectoryName = _directory;
         
         if (lock()) {
             queue.push_back(c);
@@ -228,7 +228,7 @@ public:
                 string moviePath = ofFilePath::getEnclosingDirectory(c.file, false);
 
 				// add saveDirectory
-				string outfile = moviePath + saveDirectory + ofToString(c.in,2) + "_" + ofToString(c.frames) + "_" + movieName;
+				string outfile = moviePath + ofToString(c.targetDirectoryName) + ofToString(c.in,2) + "_" + ofToString(c.frames) + "_" + movieName;
 
                 string command = path + "ffmpeg -loglevel panic -y -nostdin -ss " + ofToString(c.in,2) + " -i \"" + c.file + "\" -vframes " + ofToString(c.frames);
                 string acodec = "-an";
