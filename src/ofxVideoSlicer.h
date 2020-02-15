@@ -15,7 +15,7 @@ private:
     deque<command> queue;
     
     string      path, codec;
-    bool        transcode, scale, audio;
+	bool        transcode, scale, audio, jpgOn;
     int         width, height, rate, running;
 	string		saveDirectory;
 
@@ -53,6 +53,7 @@ public:
 		scale = false;
         running = false;
         audio = true;
+		jpgOn = false;
     }
     
 	void setTargetFolder(string directoryName){
@@ -262,9 +263,14 @@ public:
                 if( !(ret = system (command.c_str())) ) {
                     
                     // Create an jpg as well
-                    string jpg = path + "ffmpeg -loglevel panic -y -i \"" + outfile + "\" -vframes 1 \"" + outfile + ".jpg\"";
-                    system (jpg.c_str());
-                    
+					string jpg;
+					if(jpgOn)	{
+						jpg = path + "ffmpeg -loglevel panic -y -i \"" + outfile + "\" -vframes 1 \"" + outfile + ".jpg\"";
+						system (jpg.c_str());
+					} else {
+//						jpg = path + "ffmpeg -loglevel panic -y -i \"" + outfile + "\" -vframes 1 \"" + outfile + ".jpg\"";
+					}
+
                     endEvent e;
                     e.file = outfile;
                     e.jpg = outfile + ".jpg";
