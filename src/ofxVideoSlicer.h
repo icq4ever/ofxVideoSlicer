@@ -1,6 +1,6 @@
 #ifndef __OFX_VIDEO_SLICER
 #define __OFX_VIDEO_SLICER
-
+#include "ofMain.h"
 
 class ofxVideoSlicer : public ofThread{
 
@@ -19,6 +19,7 @@ private:
     bool        transcode, scale, audio;
     int         width, height, rate, running;
 
+#ifdef TARGET_OSX
     /* Helper Function */
     std::string convertCfString( CFStringRef str )
     {
@@ -31,7 +32,7 @@ private:
         else
             return std::string();
     }
-    
+#endif
 public:
     
     struct endEvent {
