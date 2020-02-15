@@ -56,6 +56,10 @@ public:
 		jpgOn = false;
     }
     
+	//--------------------------------------------------------------
+	// set save Directory
+	// if not called, save directory where original file located
+	//--------------------------------------------------------------
 	void setTargetFolder(string directoryName){
 		saveDirectory = directoryName + "/";
 	}
