@@ -1,5 +1,4 @@
-#ifndef __OFX_VIDEO_SLICER
-#define __OFX_VIDEO_SLICER
+#pragma once
 #include "ofMain.h"
 
 class ofxVideoSlicer : public ofThread{
@@ -18,6 +17,7 @@ private:
     string      path, codec;
     bool        transcode, scale, audio;
     int         width, height, rate, running;
+	string		saveDirectory;
 
 #ifdef TARGET_OSX
     /* Helper Function */
@@ -50,11 +50,14 @@ public:
         height = 0;
         rate = 500;
         codec = "h264";
-        scale = true;
+		scale = false;
         running = false;
         audio = true;
     }
     
+	void setTargetFolder(string directoryName){
+		saveDirectory = directoryName + "/";
+	}
 
     //--------------------------------------------------------------
     // ofxVideoSlicer looks for the ffmpeg binary in the Resources
@@ -218,7 +221,10 @@ public:
                 string movieName = ofFilePath::getBaseName(c.file);
                 string movieExtension = ofFilePath::getFileExt(c.file);
                 string moviePath = ofFilePath::getEnclosingDirectory(c.file, false);
-                string outfile = moviePath + ofToString(c.in,2) + "_" + ofToString(c.frames) + "_" + movieName;
+
+				// add saveDirectory
+				string outfile = moviePath + saveDirectory + ofToString(c.in,2) + "_" + ofToString(c.frames) + "_" + movieName;
+
                 string command = path + "ffmpeg -loglevel panic -y -nostdin -ss " + ofToString(c.in,2) + " -i \"" + c.file + "\" -vframes " + ofToString(c.frames);
                 string acodec = "-an";
                 if (transcode) {
@@ -264,36 +270,19 @@ public:
                     e.jpg = outfile + ".jpg";
                     e.message = c.message;
                     ofNotifyEvent(onFileProcessed, e);
-                }
-                else {
+				} else {
                     std::cout << "FFMPEG Stopped unnormal\n";
                 }
                 if (lock()) {
                     running = queue.size();
                     unlock();
                 }
-                
-
-                
             }
             ofSleepMillis(100);
         }
         // ffmpeg -i input_file.avi -codec:v h264 -profile: high -preset slow -b:v 500k -maxrate 500k -bufsize 1000k -vf scale=-1:480 -threads 0 -codec:a aac -b:a 128k output_file.mp4
-
     }
-    
-    
 };
-
-#endif
-
-
-
-
-
-
-
-
 
 
 
